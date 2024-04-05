@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    stdin_open: true
+    tty: true
+    build: ../
+    volumes:
+      - ..:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      - USERNAME=barber-loyalty
+      - PASSWORD=password
+      - HOSTNAME=db
+      - PORT=5432
+      - DB_NAME=barber-loyalty-dev
+  db:
+    image: postgres:15.5-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=barber-loyalty
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=barber-loyalty-dev
