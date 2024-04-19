@@ -16,7 +16,7 @@ services:
       - USERNAME=barber-loyalty
       - PASSWORD=password
       - HOSTNAME=db
-      - PORT=5432
+      - DB_PORT=5432
       - DB_NAME=barber-loyalty-dev
   db:
     image: postgres:15.5-alpine
@@ -28,3 +28,7 @@ services:
       - POSTGRES_USER=barber-loyalty
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=barber-loyalty-dev
+  employees-service:
+    image: pedrop8/servico-funcionario
+    ports:
+      - "8080:8080"
