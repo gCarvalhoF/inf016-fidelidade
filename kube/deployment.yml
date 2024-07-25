@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: loyalty-app
-  name: loyalty-web-service
+  name: loyalty-web-pod
 spec:
   replicas: 1
   selector:
@@ -27,7 +27,7 @@ spec:
                   name: rails-secrets
                   key: rails_master_key
           image: gcarvalhof/barber-loyalty-inf-016:0.0.2
-          name: loyalty-web-service
+          name: loyalty-web-pod
           command: ["bin/rails"]
           args: ["server", "-b", "0.0.0.0"]
           ports:
@@ -45,12 +45,12 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: loyalty-web-service
+  name: loyalty-web-pod
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: loyalty-web-service
+    name: loyalty-web-pod
   minReplicas: 1
   maxReplicas: 3
   metrics:

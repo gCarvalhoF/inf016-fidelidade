@@ -1,15 +1,10 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: kong-gateway
-  namespace: kong
+  name: kong
 spec:
-  gatewayClassName: kong-class
+  gatewayClassName: kong
   listeners:
-  - name: service-selector
-    hostname: worlds.com
+  - name: proxy
     port: 80
     protocol: HTTP
-    allowedRoutes:
-      namespaces:
-        from: All
