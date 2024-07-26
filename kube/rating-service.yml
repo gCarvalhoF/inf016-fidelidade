@@ -1,0 +1,127 @@
+# Rating service deployment file
+
+---
+
+# MongoDB Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-app-mongodb-deployment
+  labels:
+    app: rating-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-app-mongodb
+  template:
+    metadata:
+      labels:
+        app: rating-app-mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-data
+        persistentVolumeClaim:
+          claimName: rating-app-mongodb-pvc
+
+---
+
+# MongoDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-app-mongodb-service
+  labels:
+    app: rating-app
+spec:
+  type: ClusterIP
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: rating-app-mongodb
+
+---
+
+# MongoDB Persistent Volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rating-app-mongodb-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: ./data/db
+
+---
+
+# MongoDB Persistent Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rating-app-mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+# Node.js Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-app-nodejs-deployment
+  labels:
+    app: rating-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-app-nodejs
+  template:
+    metadata:
+      labels:
+        app: rating-app-nodejs
+    spec:
+      containers:
+      - name: nodejs-server
+        image: kauannn/rating
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: MONGODB_URI
+          value: mongodb://rating-app-mongodb-service:27017/rating
+
+---
+
+# Node.js Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-app-service
+  labels:
+    app: rating-app
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 124
+    targetPort: 3000
+  selector:
+    app: rating-app-nodejs

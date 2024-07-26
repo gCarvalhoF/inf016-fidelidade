@@ -11,8 +11,16 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /echo
+        value: /loyalty
     backendRefs:
-    - name: echo
+    - name: loyalty-app-service
       kind: Service
       port: 123
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /rating
+    backendRefs:
+    - name: rating-app-service
+      kind: Service
+      port: 124
