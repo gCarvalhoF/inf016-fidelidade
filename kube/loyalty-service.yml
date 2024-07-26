@@ -36,7 +36,7 @@ spec:
             value: "5432"
           - name: DB_NAME
             value: barber-loyalty-dev
-        image: barber-loyalty-inf-016:latest # gcarvalhof/barber-loyalty-inf-016:0.0.2
+        image: gcarvalhof/barber-loyalty-inf-016:0.0.2
         name: loyalty-web
         ports:
           - containerPort: 3000
