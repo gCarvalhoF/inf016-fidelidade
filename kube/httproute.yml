@@ -24,3 +24,11 @@ spec:
     - name: rating-app-service
       kind: Service
       port: 124
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /joao
+    backendRefs:
+    - name: joao-service
+      kind: Service
+      port: 125
